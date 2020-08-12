@@ -8,3 +8,4 @@ Given a list of countries and time constraint, suggest a route to travel that me
 - Best first greedy search: solution optimal, fast to generate solution even on largest domain possible (241 countries).
 
 ## Detailed analysis
+Check [!Report.pdf]("Report.pdf")
