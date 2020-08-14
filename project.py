@@ -167,7 +167,6 @@ def performance_stat(dict, size):
     stats_greedy = [0] * len(size)
 
     for i in range(len(size)):
-        print("hey")
         country_num = size[i]
         for j in range(number_prob):
             # countries to be in problem
@@ -211,7 +210,6 @@ def solution_quality_stat(dict, size):
     stats_greedy = [0] * len(size)
 
     for i in range(len(size)):
-        print("hey")
         country_num = size[i]
         for j in range(number_prob):
             # countries to be in problem
@@ -222,7 +220,7 @@ def solution_quality_stat(dict, size):
                 # add to chosen countries
                 chosen_countries.append(all_countries[random_num])
             # construct distances database for each problem
-            print(chosen_countries)
+            # print(chosen_countries)
             distances_database = construct_distance(dict, chosen_countries)
             res, time = breadth_first_search(chosen_countries[0], distances_database)
             stats_bfs[i] += time
@@ -235,29 +233,52 @@ def solution_quality_stat(dict, size):
 
     print(stats_bfs)
     print(stats_greedy)
-
     return
 
-# printing out stats to compare solution quality and
-# performance of bfs and greedy on the problem with all countries
-# with various cost constraints
-def time_constraints_stat(dict):
-    return
-def main():
-    dict = read_csv("../country-capitals.csv")
+def analysis(dict):
     size = [3,5,8,10]
     performance_stat(dict, size)
     solution_quality_stat(dict, size)
-    # distances_database = construct_distance(dict, ["United Kingdom", "United States", "Vietnam", "Thailand","Japan"])
-    # ans, time = best_first_greedy_search("Vietnam", distances_database,35)
-    # ans2, time2 = breadth_first_search("Vietnam", distances_database,35)
-    # print(ans)
-    # print(time)
-    # print(ans2)
-    # print(time2)
-#    actual_time = 0;
-#    for i in range(len(ans) - 1):
-#        actual_time += distances_database[ans[i]][ans[i+1]] / SPEED
-#    print(actual_time)
+
+def main():
+    dict = read_csv("country-capitals.csv")
+    mode = input("Enter 'a' for analysis mode, other keys for user mode: ")
+    if mode == "a":
+        analysis(dict)
+    else:
+        print("List of all countries: ")
+        all_countries_str = ""
+        count = 0
+        for each in dict.keys():
+            all_countries_str += each + "    "
+            count += 1
+            if count == 5:
+                count = 0
+                all_countries_str += "\n"
+        print(all_countries_str)
+        input_countries = input("Enter list of countries separated by comma: ")
+        chosen_countries = input_countries.split(',')
+        input_time_limit = input("Enter time limit, skip for no time limit: ")
+        if input_time_limit == "":
+            limit = inf
+        else:
+            limit = float(input_time_limit)
+        distances_database = construct_distance(dict, chosen_countries)
+        if len(chosen_countries) <= 10:
+            print("Optimal solution: ")
+            res, time = breadth_first_search(chosen_countries[0], distances_database, time_limit=limit)
+            print(res)
+            print("total time: ", time)
+            print("Greedy solution: ")
+            res, time = best_first_greedy_search(chosen_countries[0], distances_database, time_limit=limit)
+            print(res)
+            print("total time: ", time)
+        else:
+            print("Optimal solution not possible")
+            print("Greedy solution: ")
+            res, time = best_first_greedy_search(chosen_countries[0], distances_database, time_limit=limit)
+            print(res)
+            print("total time: ", time)
+
 if __name__ == "__main__":
     main()
